@@ -56,4 +56,5 @@ Route::get('posts/{postnum}', function ($slug) {
      * 
      * 
      */
-})->where('post', '[A-z_\-]+ 0-9');
+})->where('postnum', '[A-z0-9_\-]+');
+
