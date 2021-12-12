@@ -9,9 +9,11 @@
 
 <body>
     <article>
-        
-            <?= $postheader; ?>
-            <a href="/">Go Back</a>
+        <h1>{{ $postheader->title;}} </h1>
+        <div>
+            {!! $postheader->body; !!}
+        </div>
+        <a href="/">Go Back</a>
     </article>
 
 </body>

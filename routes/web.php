@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Post;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
 use Spatie\YamlFrontMatter\YamlFrontMatter;
 
 /*
@@ -17,44 +17,15 @@ use Spatie\YamlFrontMatter\YamlFrontMatter;
  */
 
 Route::get('/', function () {
-    $files = File::files(resource_path("posts"));
-    $posts = [];
-
-    foreach ($files as $file) {
-        $doc = YamlFrontMatter::parseFile($file);
-        $posts[] = new Post($doc->title, $doc->date, $doc->body(), $doc->excerpt,$doc->slug);
-    }
-
-
-
-    // ddd($posts[0]->title);
-    return view('posts',[
-        'posts'=>$posts
+    return view('posts', [
+        'posts' => Post::all(),
     ]);
 });
+
+
 Route::get('posts/{postnum}', function ($slug) {
-    /**
-     * To Show a Post view using its Sliug
-     */
     $post = Post::find($slug);
-
     return view('post', [
-        'postheader' => $post
+        'postheader' => $post,
     ]);
-    /**
-     * $path = __DIR__ . "/../resources/posts/{$slug}.html";
-     *     if (!file_exists($path)) {
-     * abort(404);
-     *return redirect('/');
-     *     }
-     *     $post = cache()->remember("posts.{$slug}", 5, fn() => file_get_contents($path));
-     * the first parameter in remember is key (Uniqe Key);
-     * $post=file_get_contents($path);
-     * return view('post', [
-     * 'postheader' => $post,
-     * ]);
-     * 
-     * 
-     */
 })->where('postnum', '[A-z0-9_\-]+');
-
