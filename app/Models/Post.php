@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\File;
 use Spatie\YamlFrontMatter\YamlFrontMatter;
 
 class Post
-
 {
     public $title;
     public $date;
@@ -23,20 +22,28 @@ class Post
         $this->slug = $slug;
     }
 
-   
     public static function all()
     {
         return cache()->rememberForever('post.all', function () {
-           return collect(File::files(resource_path("posts")))
-        ->map(fn($file) => YamlFrontMatter::parseFile($file))
-        ->map(fn($doc) => new Post($doc->title, $doc->date, $doc->body(), $doc->excerpt, $doc->slug))
-        ->sortByDesc('date');
+            return collect(File::files(resource_path("posts")))
+                ->map(fn($file) => YamlFrontMatter::parseFile($file))
+                ->map(fn($doc) => new Post($doc->title, $doc->date, $doc->body(), $doc->excerpt, $doc->slug))
+                ->sortByDesc('date');
         });
-         
+
     }
 
     public static function find($slug)
     {
-     return static::all()->firstWhere('slug',$slug);
+        return static::all()->firstWhere('slug', $slug);
+    }
+
+    public static function findorFail($slug)
+    {
+        $post = static::find($slug);
+        if (!$post) {
+            throw new ModelNotFoundException();
+        }
+        return $post;
     }
 }

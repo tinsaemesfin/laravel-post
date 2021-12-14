@@ -24,8 +24,8 @@ Route::get('/', function () {
 
 
 Route::get('posts/{postnum}', function ($slug) {
-    $post = Post::find($slug);
+    $post = Post::findorFail($slug);
     return view('post', [
         'postheader' => $post,
     ]);
-})->where('postnum', '[A-z0-9_\-]+');
+});
