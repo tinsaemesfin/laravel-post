@@ -13,5 +13,5 @@
         </div>
 
     </article>
-     @endforeach;
+     @endforeach
 </x-layout>
