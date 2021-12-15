@@ -7,11 +7,18 @@
                 {{ $post->title }}  
             </a>
         </h1>
+        <p>
+            By <a href="/author/{{$post->author->username}}">{{ $post->author->name }}</a> in <a href="/categories/{{ $post->category->slug }}">
+
+                {!! $post->category->name !!}
+            </a>
+        </p>
 
         <div>
-            {{ $post->excerpt }}
+            {!! $post->excerpt !!}
         </div>
 
     </article>
      @endforeach
 </x-layout>
+ 
