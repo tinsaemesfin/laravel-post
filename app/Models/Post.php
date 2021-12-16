@@ -2,58 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\File;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Post
-
+class Post extends Model
 {
-   public $title;
-   public $date;
-   public $body;
-   public $excerpt;
-   public $slug;
-   public function __construct($title,$date,$body,$excerpt,$slug)
-   {
-       $this->title=$title;
-       $this->date=$date;
-       $this->body=$body;
-       $this->excerpt=$excerpt;
-       $this->slug=$slug;
-   }
-
-    public static function find($slug)
+    use HasFactory;
+    /**
+     * to be filled during mass assignment
+     * protected fillable = ['title','excerpt']   
+     * it will not allow in mass assignment
+     * protected guarded = ['id']  
+     */
+    protected $with = ['category','author'];
+    public function category()
     {
-        
-        /* vds ;
-        $path = __DIR__ . "/../../resources/posts/{$slug}.html";*/
-
-        if (!file_exists($path=resource_path("posts/{$slug}.html"))) {
-            throw new ModelNotFoundException();
-           /* abort(404);
-             return redirect('/');*/
-        }
-        return cache()->remember("posts.{$slug}", 5, fn () => file_get_contents($path));
-        // the first parameter in remember is key (Uniqe Key);
+        return $this->belongsTo(Category::class);
     }
-    public static function all(){
-        $files=File::files(resource_path("posts/"));
 
-
-        /**
-         * the First return was
-         * return File::files(resource_path("posts/"));
-         *this is array map function the firt $file in function has each file instance
-         *the secound $files is the array we map 
-         * and this function also returns an array
-         */
-        
-        return array_map(function($file){
-            return $file->getcontents();
-        },$files);
-
-        
-
-        
+    public function author()
+    {
+        return $this->belongsTo(User::class,'user_id');
     }
+
 }

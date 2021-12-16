@@ -1,29 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <title>My Posts Website</title>
-    <link rel="stylesheet" href="/app.css">
-</head>
-
-<body>
-
-    <?php foreach ($posts as $post):?>
+<x-layout>
+   @foreach ($posts as $post)
     <article>
         <h1>
-            <a href="/posts/<?= $post->slug ?>">
+            <a href="/posts/{{ $post->slug }}">
 
-                <?= $post->title ?>
+                {{ $post->title }}  
             </a>
         </h1>
+        <p>
+            By <a href="/author/{{$post->author->username}}">{{ $post->author->name }}</a> in <a href="/categories/{{ $post->category->slug }}">
+
+                {!! $post->category->name !!}
+            </a>
+        </p>
 
         <div>
-            <?= $post->excerpt ?>
+            {!! $post->excerpt !!}
         </div>
 
     </article>
-    <?php endforeach;  ?>
-</body>
-
-</html>
+     @endforeach
+</x-layout>
+ 
