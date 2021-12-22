@@ -10,11 +10,21 @@ class Post extends Model
     use HasFactory;
     /**
      * to be filled during mass assignment
-     * protected fillable = ['title','excerpt']   
+     * protected fillable = ['title','excerpt']
      * it will not allow in mass assignment
-     * protected guarded = ['id']  
+     * protected guarded = ['id']
      */
-    protected $with = ['category','author'];
+    protected $with = ['category', 'author'];
+
+    public function scopeFilter($query, array $filters)
+    {
+
+        $query->when($filters['search'] ?? false, function ($query, $search) {
+            $query->where('title', 'like', '%' . $search . '%')
+                ->orWhere('body', 'like', '%' . $search . '%');
+        });
+
+    }
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -22,7 +32,7 @@ class Post extends Model
 
     public function author()
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
 }
